@@ -3,10 +3,12 @@ from rest_framework   import serializers
 from users.models     import User
 from users.validators import validate_password
 
-class UserSerializer(serializers.ModelSerializer):
+
+class UserSignUpSerializer(serializers.ModelSerializer):
+
     def validate(self, data):
         if not validate_password(data['password']):
-            raise  serializers.ValidationError({'숫자와 영문자 조합 8자를 입력해주세요'})
+            raise serializers.ValidationError('숫자와 영문자 조합 8자를 입력해주세요')
         return data
 
     def create(self, validated_data):
@@ -20,6 +22,6 @@ class UserSerializer(serializers.ModelSerializer):
         return user
     
     class Meta:
-        model = User
-        fields = '__all__'
-    
+        model  = User
+        fields = ['id', 'email', 'first_name', 'last_name', 'password']
+        extra_kwargs = {'password': {'write_only': True}}
