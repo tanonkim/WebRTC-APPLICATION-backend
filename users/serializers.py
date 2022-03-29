@@ -25,3 +25,29 @@ class UserSignUpSerializer(serializers.ModelSerializer):
         model  = User
         fields = ['id', 'email', 'first_name', 'last_name', 'password']
         extra_kwargs = {'password': {'write_only': True}}
+
+
+class UserSignInSerializer(serializers.Serializer):
+        
+    email = serializers.EmailField(max_length=100)
+    password = serializers.CharField(max_length=255, write_only=True)
+        
+    def validate(self, data):
+        email    = data.get("email")
+        password = data.get("password")
+
+        if email is None or password is None:
+            raise serializers.ValidationError('email 또는 password를 입력해주세요')
+        
+        try:
+            user = User.objects.get(email=email)
+            print(user)
+            
+            if not user.check_password(password):
+                raise serializers.ValidationError('올바른 password를 입력해주세요')
+            
+            data['user'] = user
+            return data
+        
+        except User.DoesNotExist:
+            raise serializers.ValidationError("사용자가 존재하지 않습니다.")
