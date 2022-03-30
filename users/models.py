@@ -1,6 +1,7 @@
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 from django.db                  import models
 
+
 class UserManager(BaseUserManager):    
     
     use_in_migrations = True    
@@ -16,10 +17,11 @@ class UserManager(BaseUserManager):
         user.set_password(password)
         return user     
 
+
 class User(AbstractBaseUser):
     objects = UserManager()
 
-    email      = models.EmailField(max_length=100, unique=True)
+    email      = models.EmailField(max_length=50, unique=True)
     first_name = models.CharField(max_length=25)
     last_name  = models.CharField(max_length=25)
     created_at = models.DateTimeField(auto_now_add=True)

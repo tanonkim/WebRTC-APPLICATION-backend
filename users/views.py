@@ -6,6 +6,7 @@ from rest_framework.authtoken.models import Token
 
 from users.serializers               import UserSignUpSerializer, UserSignInSerializer
 
+
 class SignupView(CreateAPIView):
     
     serializer_class = UserSignUpSerializer
@@ -14,8 +15,7 @@ class SignupView(CreateAPIView):
 class SigninView(APIView):
     
     def post(self, request):
-
-        if request.data.get('email') is None or request.data.get('password') is None:
+        if not request.data.get('email') or not request.data.get('password'):
             return Response({'message':['email 또는 password를 입력해주세요.']}, status=status.HTTP_400_BAD_REQUEST)
         
         serializer = UserSignInSerializer(data=request.data)
