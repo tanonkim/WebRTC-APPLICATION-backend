@@ -149,10 +149,7 @@ CORS_ALLOW_HEADERS = (
 APPEND_SLASH = False
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-    ],
+    'NON_FIELD_ERRORS_KEY': 'message',
 }
 
 AUTH_USER_MODEL = 'users.User'
