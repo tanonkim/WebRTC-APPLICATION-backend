@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'channels',
     'users',
-    'chat'
+    'call'
 
 ]
 
@@ -169,3 +169,9 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels_redis.core.RedisChannelLayer",
+#     },
+# }
