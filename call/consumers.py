@@ -3,12 +3,12 @@ import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 
 
-class ChatConsumer(AsyncWebsocketConsumer):
+class VideoCallConsumer(AsyncWebsocketConsumer):
+    
+    room_group_name = 'Room'
     
     async def connect(self):
 
-        self.room_group_name = 'Room'
-         
         await self.channel_layer.group_add(
             self.room_group_name,
             self.channel_name
@@ -27,7 +27,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         receive_dict = json.loads(text_data)
         action = receive_dict['action']
 
-        if(action == 'new-offer') or (action =='new-answer'):
+        if action == 'new-offer' or action == 'new-answer':
             
             receiver_channel_name = receive_dict['message']['receiver_channel_name']
 
