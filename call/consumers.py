@@ -5,63 +5,74 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 
 class VideoCallConsumer(AsyncWebsocketConsumer):
     
-    room_group_name = 'Room'
-    
     async def connect(self):
-
+        self.room_group_name = self.scope['url_route']['kwargs']['room_name']
+ 
         await self.channel_layer.group_add(
             self.room_group_name,
             self.channel_name
-        )
-
+        )  
+        
         await self.accept()
 
-    async def disconnect(self, code):
-        
+    async def disconnect(self, close_code):
         await self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name
-        )        
-
+        )     
+        
     async def receive(self, text_data):
         receive_dict = json.loads(text_data)
-        action = receive_dict['action']
-
-        if action == 'new-offer' or action == 'new-answer':
-            
-            receiver_channel_name = receive_dict['message']['receiver_channel_name']
-
-            receive_dict['message']['receiver_channel_name'] = self.channel_name
-
-            await self.channel_layer.send(
-                receiver_channel_name,
-                {
-                    'type': 'send.sdp',
-                    'receive_dict': receive_dict,
+        action = receive_dict['type']
+        
+        if action == 'offer':
+            await self.channel_layer.group_send(    
+                self.room_group_name, {
+                    'type' : 'offer',
+                    'data' : receive_dict['data']
                 }
             )
 
-            return
-
-        receive_dict['message']['receiver_channel_name'] = self.channel_name
-
-        await self.channel_layer.group_send(
-            self.room_group_name,
-            {
-                'type': 'send.sdp',
-                'receive_dict': receive_dict,
-            }
+        if action == 'answer':
+            await self.channel_layer.group_send(
+                self.room_group_name, {
+                    'type' : 'answer',
+                    'data' : receive_dict['data']
+                }
+            )
+            
+        if action == 'ICE':
+            await self.channel_layer.group_send(
+                self.room_group_name, {
+                    'type' : 'ICE',
+                    'data' : receive_dict['data']
+                }
+            )       
+        
+    async def offer(self, event):
+        await self.send(text_data=json.dumps(
+                {
+                    'type' : 'offer',
+                    'data' : event['data']
+                }
+            )
         )
 
-    async def send_sdp(self, event):
-        receive_dict = event['receive_dict']
-
-        this_peer = receive_dict['peer']
-        action = receive_dict['action']
-        message = receive_dict['message']
-
-        await self.send(text_data=json.dumps({
-            'peer': this_peer,
-            'action': action,
-            'message': message,
-        }))
+    async def answer(self, event):
+        await self.send(text_data=json.dumps(
+                {
+                    'type' : 'answer',
+                    'data' : event['data'],
+                }
+            )
+        )  
+                  
+    async def ICE(self, event):
+        await self.send(text_data=json.dumps(
+                {
+                    'type' : 'ICE',
+                    'data' : event['data']
+                }
+            )
+        )
+            
