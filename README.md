@@ -42,32 +42,33 @@ PuzzleAI와 기업협업 간 진행한 프로젝트로 비대면 진료 솔루�
 <br><br>
 
 
-# 💡 초기기획 & ERD
-
-## ERD
-
-<img width="1400" alt="스크린샷 2022-03-25 오후 5 02 20" src="https://user-images.githubusercontent.com/60570733/160079346-672ac8a8-5314-4167-adb9-bc433ada24c3.png">
-<a href="https://www.erdcloud.com/p/ubQyfGJ5FLKhYbRAy">Site Link</a>
-
-<br><br>
+# 💡 초기기획 
 
 ## User flow
 
-<img width="924" alt="스크린샷 2022-03-27 오전 12 41 14" src="https://user-images.githubusercontent.com/60570733/160246837-e87b4a41-f758-4d53-a715-345eb299babd.png">
+<img width="1185" alt="스크린샷 2022-08-26 오전 12 38 22" src="https://user-images.githubusercontent.com/60570733/186709163-5be251c9-4bbf-463b-a194-9187aebdf35f.png">
 
 
-## 초기기획 및 구현 목표
-* 짧은 기간동안 service flow에 해당하는 기능 구현을 목표
-* 개발은 초기세팅부터 전부 직접 구현
-* 사이트 카테고리 중 숙소 예약 기능만 구현
-* 필수 구현 사항을 (소셜) 로그인, 숙소 조회, 숙소 상세페이지, 예약으로 설정 
-* 한 상품에 여러 옵션(숙소 종류, 인원, 기간)이 적용될 수 있게 기획
-* 예약 된 일정을 제외한 예약 가능일만 예약할 수 있는 로직 구현
-* 리뷰 CRUD
+
+
+## 필수기능
+* Django User model을 사용한 유저관리
+  * 회원가입
+  * 로그인
+  
+* 영상연결
+   * WebRTC 
+   * WebSocket
+
 
 <br><br>
 
+## 추가기능
+* Unit Test
+* Docker
+* HTTPS 적용
 
+<br><br>
 
 # 📝 적용 기술 및 구현 기능
 
@@ -77,7 +78,7 @@ PuzzleAI와 기업협업 간 진행한 프로젝트로 비대면 진료 솔루�
     <a href="#"><img src="https://img.shields.io/badge/SASS-254BDD?style=plastic&logo=sass&logoColor=white"/></a>
     <a href="#"><img src="https://img.shields.io/badge/javascript-EFD81D?style=plastic&logo=javascript&logoColor=white"/></a>
     <a href="#"><img src="https://img.shields.io/badge/typescript-3073BF?style=plastic&logo=typescript&logoColor=white"/></a>
-    <a href="#"><img src="https://img.shields.io/badge/React-68D5F3?style=plastic&logo=react&logoColor=white"/></a>
+    <a href="#"><img src="https://img.shields.io/badge/ReactNative-68D5F3?style=plastic&logo=react&logoColor=white"/></a>
     <a href="#"><img src="https://img.shields.io/badge/Redux-7F42C3?style=plastic&logo=redux&logoColor=white"/></a>
     <a href="#"><img src="https://img.shields.io/badge/styled components-f2af9b?style=plastic&logo=styled-components &logoColor=white"/></a>
     * ### Back-end  
@@ -106,64 +107,46 @@ PuzzleAI와 기업협업 간 진행한 프로젝트로 비대면 진료 솔루�
         <a href="#"><img src="https://img.shields.io/badge/Trello-2580F7?style=plastic&logo=trello&logoColor=white"/></a>
         <a href="#"><img src="https://img.shields.io/badge/Notion-F7F7F7?style=plastic&logo=notion&logoColor=black"/></a>
 * ## 구현기능
-    * 회원가입 / 로그인
-        - 카카오톡 소셜 로그인
-        - OAuth2에 맞는 로직 구현
-        - 일치하는 user가 없으면 Create, user가 있으면 Get하는 로직 적용
+    * 회원가입
+        - Django Rest Framework를 활용한 유저 관리
+        - UserSerializer로 데이터 생성
+        - DRF를 활용한 서버 유효성 처리
         - Unit Test 완료
-    * Room List API
-        - Q를 활용해 판매 상품의 분류에 따른 filtering 적용
-        - 가격, 기간, 인원, 카테고리, amenity에 따른 filtering 적용
-        - pagination
+        
+    * 로그인
+        - Django Rest Framework를 활용한 유저 관리
+        - password 암호화 및 Meta 속성을 활용한 read only 제어
         - Unit Test 완료
-    * Room Detail API
-        - 숙소 상세페이지에 필요한 데이터를 필터링 하여 프론트엔드로 전달
-        - path parameter 경로 적용
-        - ORM 최적화
-        - Unit Test 완료
-    * Wishlist API
-        - 해당 room_id를 가져온 후 Wishlist를 생성
-        - 성공할 시 WishlistRoom 테이블의 항목 생성
-        - adding and deleting 기능 구현
-        - wishlist추가 시 중간테이블도 생성되는 로직 구현
-        - Unit Test 완료
-    * Reservation API
-        - 예약 CRUD 기능 구현
-        - 일련의 과정에 원자성을 부여하기 위해 transaction 사용
-        - 기존 예약이 존재할 때, 예약가능일자 검증 조건 확인
-     * Review API
-        - 리뷰 CRUD 구현
-        - AWS S3 활용하여 이미지 저장
+        
+    * WebSocket 연결
+        - Django-Channels 활용 
+        - Coturn을 활용한 Turn Server 배포
+        - SSL이 적용된 webSocket(WSS) 설정
+        - channels가 Web Socket의 요청을 받은 후 라우팅 설정 확인
+        - 라우팅 설정을 확인 후 대응하는 Consumer을 찾고 요청 처리
+        - Redis를 저장소로 하는 채널 레이어를 사용
+        
+    * HTTPS 적용
+        - AWS Route 53 도메인 등록
+        - ABL, ACM에서 SSL인증서 발급 후 HTTP 요청을 HTTPS 로 받도록 처리
+        
+    * 파이썬 배포 및 웹서버 배포 
+        - uWSGI, Daphne을 통한 파이썬 배포
+        - Nginx를 통한 웹서버 배포
+
     
 <br><br>
 
 
 ## API 문서화
-<img width="1144" alt="스크린샷 2022-03-25 오후 5 32 57" src="https://user-images.githubusercontent.com/60570733/160084208-f227cb40-12cb-44cc-84ff-8ec766a7a8bb.png">
+![image](https://user-images.githubusercontent.com/60570733/186714336-814559b3-7707-4e8f-9f9b-2b08037d4f3a.png)
 
 * 포스트맨을 이용해 API 문서화를 진행
-* 이번 프로젝트에서 쿼리파라미터(category, check_in&out, amenity, price, guest, options, page, booking 등)로 많은 값들을 받아야했기 때문에 API 문서화를 진행
 * 프론트엔드와 소통 시 문서를 통해 1차적으로 커뮤니케이션 비용을 줄임
 <br><br>
 
-## Trello
-
-<img width="1676" alt="스크린샷 2022-03-25 오후 5 31 52" src="https://user-images.githubusercontent.com/60570733/160083999-169baf7d-2f32-4543-8b84-d0d09e74b1c2.png">
-
-* 트렐로를 이용해 모든 업무들을 세분화 시켜 하나의 티켓으로 제작
-* 팀원들과 공유해야할 내용은 공지 탭을 통해 단일화
-* 전체 프로세스를 네 가지 카테고리로 나눠서 각각의 티켓을 과정에 따라 하나씩 이동 시키며 프로젝트의 모든 일정과 업무를 관리
-* 각자 데일리 스탠드업 미팅 로그를 작성하고 10~20분내로 짧게 진행상황 및 블로커를 점검
-* 스프린트 주기를 지켜 한 스프린트가 끝나고 회고미팅을 해 발전방향을 모색
-
 <br>
 
-# Reference
-* 이 프로젝트는 [Airbnb](https://airbnb.co.kr) 사이트를 참조하여 학습목적으로 만들었습니다.
-* 실수수준의 프로젝트이지만 학습용으로 만들었기 떄문에 이 코드를 활용하여 이득을 취하거나 무단 배포할 경우 법적으로 문제될 수 있습니다.
-* 이 프로젝트에서 사용하고 있는 사진 대부분은 위코드에서 구매한 것이므로 해당 프로젝트 외부인이 사용할 수 없습니다.
-* 이 프로젝트에서 사용하고 있는 로고와 배너는 해당 프로젝트 팀원 소유이므로 해당 프로젝트 외부인이 사용할 수 없습니다.
-
-![Footer](https://capsule-render.vercel.app/api?type=waving&color=ff385c&height=100&section=footer)
+![Footer](https://capsule-render.vercel.app/api?type=waving&color=0F6975&height=100&section=footer)
 
 
