@@ -9,7 +9,7 @@ PuzzleAI와 기업협업 간 진행한 프로젝트로 비대면 진료 솔루�
 * 개발 기간 : 2022/3/28 ~ 2022/4/22 (4주간)
 * 프론트엔드 1명, 백엔드 1명
     * Back-end   
-        * 김기현 - Modeling, SignIn API, SignUp API, 화상통화 기능을 위한 Signaling Server 구축, HTTPS 적용, 파이썬 배포 및 웹서버 
+        * 김기현 - Modeling, SignIn API, SignUp API, 화상통화 기능을 위한 Signaling Server 구축, HTTPS 적용, 파이썬 배포 및 웹서버 배포
 
 
 # 📍 데모 영상
